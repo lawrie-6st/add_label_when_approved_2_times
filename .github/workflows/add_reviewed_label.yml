@@ -7,8 +7,6 @@ on:
 jobs:
   check_reviews:
     runs-on: ubuntu-latest
-    # labelがない時だけ実行する。
-    if: ${{ contains( github.event.pull_request.labels.*.name, 'Reviewed') == 'false' }} 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -22,8 +20,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Check Approved
         run: echo "Approval is ${{ steps.approved.outputs.approved }}"
+      - name: Check Reviewed label is exist
+        run: ${{ contains( github.event.pull_request.labels.*.name, 'Reviewed') == 'false' }} 
       - name: Add Reviewed Label
-        if: ${{ steps.approved.outputs.approved == 'true' }}
+        if: ${{ steps.approved.outputs.approved == 'true' }} && ${{ contains( github.event.pull_request.labels.*.name, 'Reviewed') == 'false' }} 
         uses: actions/github-script@v4
         with:
           script: |
