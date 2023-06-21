@@ -21,7 +21,7 @@ jobs:
       - name: Check Approved
         run: echo "Approval is ${{ steps.approved.outputs.approved }}"
       - name: Check Reviewed label is exist
-        run: "Reviewed label is ${{ github.event.pull_request.labels.*.name, 'Reviewed'}} " 
+        run: "Reviewed label is ${{ contains(github.event.pull_request.labels.*.name, 'Reviewed') }} " 
       - name: Add Reviewed Label
         if: ${{ steps.approved.outputs.approved == 'true' }} && ${{ contains( github.event.pull_request.labels.*.name, 'Reviewed') == 'false' }} 
         uses: actions/github-script@v4
