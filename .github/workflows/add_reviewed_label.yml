@@ -23,7 +23,7 @@ jobs:
       - name: Check Reviewed label is exist
         run: "Reviewed label is ${{ contains(github.event.pull_request.labels.*.name, 'Reviewed') }} " 
       - name: Add Reviewed Label
-        if: ${{ steps.approved.outputs.approved == 'true' }} && ${{ contains( github.event.pull_request.labels.*.name, 'Reviewed') == 'false' }} 
+        if: ${{ steps.approved.outputs.approved == 'true' }} && ${{ !contains( github.event.pull_request.labels.*.name, 'Reviewed')}} 
         uses: actions/github-script@v4
         with:
           script: |
