@@ -1,0 +1,34 @@
+name: Add Review Label
+on:
+  pull_request_review:
+    types:
+      - submitted
+
+jobs:
+  check_reviews:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Count Approve
+        uses: luisrjaeger/approved-event-checker@1.0.0 # https://github.com/marketplace/actions/approved-event-checker
+        id: approved
+        with:
+          approvals: 2
+          check_changes_requested: true # change_requestがある場合はさ、approveにしない。
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: echo "Approved !!"
+        if: ${{ steps.approved.outputs.approved == 'true' }}
+
+      - name: Add Reviewed Label
+        if: ${{ steps.approved.outputs.approved == 'true' }}
+        uses: actions/github-script@v4
+        with:
+          script: |
+            github.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['Reviewed']
+            })
