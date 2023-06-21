@@ -7,6 +7,8 @@ on:
 jobs:
   check_reviews:
     runs-on: ubuntu-latest
+    # labelがない時だけ実行する。
+    if: ${{ contains( github.event.pull_request.labels.*.name, 'Reviewed') == 'false' }} 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
