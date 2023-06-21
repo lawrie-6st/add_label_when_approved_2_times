@@ -18,9 +18,8 @@ jobs:
           check_changes_requested: true # change_requestがある場合はさ、approveにしない。
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: echo "Approved !!"
-        if: ${{ steps.approved.outputs.approved == 'true' }}
-
+      - name: Check Approved
+        run: echo "Approval is ${{ steps.approved.outputs.approved }}"
       - name: Add Reviewed Label
         if: ${{ steps.approved.outputs.approved == 'true' }}
         uses: actions/github-script@v4
